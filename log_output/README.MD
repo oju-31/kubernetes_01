@@ -1,0 +1,1 @@
+Deploy with `kubectl create deployment log-app --image=toussyn/log_output:latest`
