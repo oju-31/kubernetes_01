@@ -1,17 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo
+  name: log-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: todo
+      app: log-app
   template:
     metadata:
       labels:
-        app: todo
+        app: log-app
     spec:
       containers:
-        - name: todo-app
-          image: toussyn/todo-app:latest
+        - name: log-app
+          image: toussyn/log_output:latest
+        

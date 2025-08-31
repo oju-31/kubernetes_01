@@ -1,1 +1,2 @@
-Deploy with `kubectl create deployment todo --image=toussyn/todo-app:latest`
+Deploy with `
+`
