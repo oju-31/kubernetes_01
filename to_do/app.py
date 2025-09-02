@@ -24,7 +24,7 @@ def home():
 
 logger = setup_logger()
 # Get port from environment, default to 5000
-port = int(os.getenv("PORT", 5000))
+port = int(os.getenv("PORT", 3000))
 
 # Log the server start message
 logger.info(f"Server started in port {port}")

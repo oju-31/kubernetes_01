@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 
 # Environment variable for Flask
-ENV PORT=5000
+ENV PORT=3000
 
 # Run the app
 CMD ["python", "app.py"]
