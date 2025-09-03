@@ -9,7 +9,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 # Copy the Python application
 
-COPY index.py .
+COPY pong.py .
 
 # Run the application
-CMD ["python", "index.py"]
+CMD ["python", "pong.py"]

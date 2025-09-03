@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: log-app
+  name: pong-dep
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: log-app
+      app: pong-app
   template:
     metadata:
       labels:
-        app: log-app
+        app: pong-app
     spec:
       containers:
-        - name: log-app
-          image: toussyn/log_output:v2
+        - name: pong-app
+          image: toussyn/ping-pong:v01
           imagePullPolicy: Always
         
