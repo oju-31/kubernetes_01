@@ -14,5 +14,6 @@ spec:
     spec:
       containers:
         - name: log-app
-          image: toussyn/log_output:latest
+          image: toussyn/log_output:v2
+          imagePullPolicy: Always
         
