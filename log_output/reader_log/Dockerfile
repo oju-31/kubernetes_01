@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy dependencies file (if needed later)
 COPY requirements.txt .
@@ -9,7 +9,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 # Copy the Python application
 
-COPY index.py .
+COPY reader.py .
+
+# Environment variable for Flask
+ENV PORT=3000
 
 # Run the application
-CMD ["python", "index.py"]
+CMD ["python", "reader.py"]

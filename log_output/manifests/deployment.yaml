@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: log-app
+  name: log-app-dep
 spec:
   replicas: 1
   selector:
@@ -12,8 +12,19 @@ spec:
       labels:
         app: log-app
     spec:
+      volumes: # Define volume
+        - name: shared-image
+          emptyDir: {}
       containers:
-        - name: log-app
-          image: toussyn/log_output:v2
+        - name: log-writer
+          image: toussyn/writer:v1
           imagePullPolicy: Always
-        
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files
+        - name: log-reader
+          image: toussyn/reader:v1
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files
