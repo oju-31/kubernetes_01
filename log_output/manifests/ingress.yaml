@@ -13,10 +13,10 @@ spec:
             name: log-app-svc
             port:
               number: 2345
-      # - path: /pingpong
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: pong-svc
-      #       port:
-      #         number: 2345
+      - path: /pingpong
+        pathType: Prefix
+        backend:
+          service:
+            name: pong-svc
+            port:
+              number: 2345

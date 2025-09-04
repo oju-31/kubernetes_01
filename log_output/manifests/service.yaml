@@ -27,3 +27,6 @@ spec:
 #       protocol: TCP
 #       port: 1234 # This is a port that is available to the cluster, in this case it can be ~ anything
 #       targetPort: 3000 # This is the target port
+
+
+# k3d cluster create --port 8082:30080@agent:0 -p 8081:80@loadbalancer --agents 2

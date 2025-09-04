@@ -13,18 +13,19 @@ spec:
         app: log-app
     spec:
       volumes: # Define volume
-        - name: shared-image
-          emptyDir: {}
+        - name: shared-log
+          persistentVolumeClaim:
+            claimName: log-claim
       containers:
         - name: log-writer
           image: toussyn/writer:v1
           imagePullPolicy: Always
           volumeMounts: # Mount volume
-          - name: shared-image
+          - name: shared-log
             mountPath: /usr/src/app/files
         - name: log-reader
           image: toussyn/reader:v1
           imagePullPolicy: Always
           volumeMounts: # Mount volume
-          - name: shared-image
+          - name: shared-log
             mountPath: /usr/src/app/files
