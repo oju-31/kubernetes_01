@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The project App</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .image-container {
+            margin: 30px 0;
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>The project App</h1>
+        
+        {% if image_filename %}
+        <div class="image-container">
+            <img src="{{ url_for('serve_image', filename=image_filename) }}" alt="Random Image">
+        </div>
+        {% else %}
+        <p>No image available</p>
+        {% endif %}
+        
+        <div class="subtitle">DevOps with Kubernetes 2025</div>
+    </div>
+</body>
+</html>

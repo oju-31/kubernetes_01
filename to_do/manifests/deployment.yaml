@@ -12,7 +12,21 @@ spec:
       labels:
         app: todo
     spec:
+      volumes: # Define volume
+        - name: shared-image
+          persistentVolumeClaim:
+            claimName: image-claim
       containers:
-        - name: todo-app
-          image: toussyn/todo-app:v02
+        - name: image-writer
+          image: toussyn/img-writer:v02
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files
+        - name: image-reader
+          image: toussyn/todo-app:v03
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files
         
