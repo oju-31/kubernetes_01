@@ -85,9 +85,11 @@
         {% endif %}
         
         <div class="todo-form">
-            <input type="text" id="todoInput" class="todo-input" placeholder="Enter a new todo..." maxlength="140">
-            <button class="send-btn">Create todo</button>
-            <div class="char-count" id="charCount">0/140 characters</div>
+            <form method="POST" action="/add_todo">
+                <input type="text" name="todo" id="todoInput" class="todo-input" placeholder="Enter a new todo..." maxlength="140" required>
+                <button type="submit" class="send-btn">Create todo</button>
+                <div class="char-count" id="charCount">0/140 characters</div>
+            </form>
         </div>
         
         <div class="todo-list">

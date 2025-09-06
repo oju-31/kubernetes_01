@@ -43,6 +43,16 @@ def serve_image(filename):
     """Serve images from the files directory."""
     return send_from_directory(FILES_DIR, filename)
 
+@app.route('/add_todo', methods=['POST'])
+def add_todo():
+    """Add a new todo to the list."""
+    new_todo = request.form.get('todo', '').strip()
+    
+    if new_todo and len(new_todo) <= 140:
+        todos.append(new_todo)
+    
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=port, debug=True)
