@@ -7,6 +7,12 @@ app = Flask(__name__)
 # Configuration
 FILES_DIR = '/usr/src/app/files'
 
+# Hardcoded todos
+todos = [
+    "Learn JavaScript",
+    "Learn React", 
+    "Build a project"
+]
 
 def get_latest_image():
     """Get the most recent image file from the files directory."""
@@ -28,13 +34,13 @@ def get_latest_image():
 
 @app.route('/')
 def index():
-    """Main page displaying the latest image."""
+    """Main page displaying the latest image and todos."""
     image_filename = get_latest_image()
-    return render_template('index.html', image_filename=image_filename)
+    return render_template('index.html', image_filename=image_filename, todos=todos)
 
-@app.route('/image/<filename>')
+@app.route('/files/<filename>')
 def serve_image(filename):
-    """Serve image files from the files directory."""
+    """Serve images from the files directory."""
     return send_from_directory(FILES_DIR, filename)
 
 if __name__ == '__main__':

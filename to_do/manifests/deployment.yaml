@@ -24,7 +24,7 @@ spec:
           - name: shared-image
             mountPath: /usr/src/app/files
         - name: image-reader
-          image: toussyn/todo-app:v03
+          image: toussyn/todo-app:v04
           imagePullPolicy: Always
           volumeMounts: # Mount volume
           - name: shared-image
