@@ -24,7 +24,6 @@ def main():
     random_string = str(uuid.uuid4())
     logger = setup_logger()
     LOG_FILE = '/usr/src/app/files/data.log'
-    
     logger.info(f"Starting log writer with random string: {random_string}")
     
     try:

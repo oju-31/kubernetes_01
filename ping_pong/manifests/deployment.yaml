@@ -12,14 +12,7 @@ spec:
       labels:
         app: pong-app
     spec:
-      volumes: # Define volume
-        - name: shared-log
-          persistentVolumeClaim:
-            claimName: log-claim
       containers:
         - name: pong-app
-          image: toussyn/ping-pong:v02
+          image: toussyn/ping-pong:v03
           imagePullPolicy: Always
-          volumeMounts: # Mount volume
-          - name: shared-log
-            mountPath: /usr/src/app/files

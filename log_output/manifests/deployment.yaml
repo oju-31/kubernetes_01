@@ -12,20 +12,17 @@ spec:
       labels:
         app: log-app
     spec:
-      volumes: # Define volume
-        - name: shared-log
-          persistentVolumeClaim:
-            claimName: log-claim
+      # volumes: # Define volume
+      #   - name: shared-log
+      #     emptyDir:
+      #       sizeLimit: 1Gi
       containers:
-        - name: log-writer
-          image: toussyn/writer:v1
-          imagePullPolicy: Always
-          volumeMounts: # Mount volume
-          - name: shared-log
-            mountPath: /usr/src/app/files
+      #   - name: log-writer
+      #     image: toussyn/writer:v1
+      #     imagePullPolicy: Always
+      #     volumeMounts:
+      #       - mountPath: /usr/src/app/files
+      #         name: shared-log
         - name: log-reader
-          image: toussyn/reader:v1
+          image: toussyn/reader:v2
           imagePullPolicy: Always
-          volumeMounts: # Mount volume
-          - name: shared-log
-            mountPath: /usr/src/app/files
