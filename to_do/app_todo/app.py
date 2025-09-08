@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, request, redirect, url_for, jsonify
+from flask import Flask, render_template, send_from_directory, request, redirect, url_for, jsonify, flash
 from pathlib import Path
 import os
 import requests
@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # Configuration
 FILES_DIR = '/usr/src/app/files'
-TODO_API_BASE_URL = 'http://todo-svc:2345' 
+TODO_API_BASE_URL = 'http://todo-backend-svc:2345' 
 
 def get_latest_image():
     """Get the most recent image file from the files directory."""
