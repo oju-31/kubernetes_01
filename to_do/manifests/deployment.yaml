@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-dep
+  name: todo-app-dep
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: todo
+      app: todo-app
   template:
     metadata:
       labels:
-        app: todo
+        app: todo-app
     spec:
       volumes: # Define volume
         - name: shared-image
@@ -23,10 +23,29 @@ spec:
           volumeMounts: # Mount volume
           - name: shared-image
             mountPath: /usr/src/app/files
-        - name: image-reader
-          image: toussyn/todo-app:v04
+        - name: todo-app
+          image: toussyn/todo-app:v05
           imagePullPolicy: Always
           volumeMounts: # Mount volume
           - name: shared-image
             mountPath: /usr/src/app/files
-        
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      containers:
+        - name: todo-backend
+          image: toussyn/todo-backend:v01
+          imagePullPolicy: Always
