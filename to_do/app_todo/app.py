@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, request, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, send_from_directory, request, redirect, url_for, jsonify
 from pathlib import Path
 import os
 import requests
@@ -65,17 +65,22 @@ def add_todo():
     todo_text = request.form.get('todo', '').strip()
     
     if not todo_text:
-        flash('Please enter a todo item', 'error')
+        message = 'Please enter a todo item'
+        category = 'error'
     elif len(todo_text) > 140:
-        flash('Todo must be 140 characters or less', 'error')
+        message = 'Todo must be 140 characters or less'
+        category = 'error'
     else:
         success = add_todo_to_api(todo_text)
         if success:
-            flash(f'Todo "{todo_text}" added successfully!', 'success')
+            message = f'Todo "{todo_text}" added successfully!'
+            category = 'success'
         else:
-            flash('Failed to add todo. Please try again later.', 'error')
+            message = 'Failed to add todo. Please try again later.'
+            category = 'error'
     
-    return redirect(url_for('index'))
+    # Pass message + category as query params
+    return redirect(url_for('index', message=message, category=category))
 
 @app.route('/api/todos', methods=['GET'])
 def api_get_todos():

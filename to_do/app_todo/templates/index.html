@@ -121,8 +121,11 @@
                 <div class="char-count" id="charCount">0/140 characters</div>
             </form>
         </div>
-        
-        <div class="status-message" id="statusMessage"></div>
+        {% if request.args.get('message') %}
+            <div class="status-message {{ 'status-error' if request.args.get('category') == 'error' else 'status-success' }}">
+        {{ request.args.get('message') }}
+            </div>
+        {% endif %}
         
         <div class="todo-list">
             <ul id="todoList">
