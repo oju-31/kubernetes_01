@@ -19,10 +19,14 @@ spec:
       labels:
         app: log-app
     spec:
-      # volumes: # Define volume
-      #   - name: shared-log
-      #     emptyDir:
-      #       sizeLimit: 1Gi
+      volumes: # Define volume
+        - name: config-volume
+          configMap:
+            name: log-config
+            items:
+              - key: information.txt
+                path: info.txt
+          
       containers:
       #   - name: log-writer
       #     image: toussyn/writer:v1
@@ -33,3 +37,9 @@ spec:
         - name: log-reader
           image: toussyn/reader:v2
           imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: log-config
+          volumeMounts:
+          - mountPath: /usr/src/app/files
+            name: config-volume

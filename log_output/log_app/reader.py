@@ -1,17 +1,31 @@
 from flask import Flask
-import os
+from os import getenv
 import logging
 import uuid
 from datetime import datetime, timezone
 import requests
 
 app = Flask(__name__)
+mssg = 'MESSAGE'
+mssg_value = getenv(mssg)
+info_file = '/usr/src/app/files/info.txt'
 
 
 def setup_logger():
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
     return logger
+
+
+def get_file_content():
+    try:
+        with open(info_file, 'r') as file:
+            content = file.read()
+            return content
+    except FileNotFoundError:
+        logger = setup_logger()
+        logger.error(f"File '{info_file}' not found.")
+        return None
 
 
 def get_ping_pong_count():
@@ -38,8 +52,10 @@ def read_file():
     # Update timestamp
     now = datetime.now(timezone.utc)
     current_timestamp = now.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
-    line = f"{current_timestamp}: {random_string}.\n"
-    
+    line = f'file content: {get_file_content()}\n'
+    line += f'env variable: {mssg}={mssg_value}\n'
+    line += f"{current_timestamp}: {random_string}.\n"
+
     # Get ping/pong count
     ping_pong_count = get_ping_pong_count()
     
@@ -54,5 +70,5 @@ def read_file():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 3000))
+    port = int(getenv('PORT', 3000))
     app.run(host='0.0.0.0', port=port)
