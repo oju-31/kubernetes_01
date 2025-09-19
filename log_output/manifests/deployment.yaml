@@ -35,7 +35,7 @@ spec:
       #       - mountPath: /usr/src/app/files
       #         name: shared-log
         - name: log-reader
-          image: toussyn/reader:v2
+          image: toussyn/reader:v3
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
