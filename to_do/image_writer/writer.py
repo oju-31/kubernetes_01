@@ -1,4 +1,4 @@
-import os
+from os import getenv
 import time
 import logging
 import urllib.request
@@ -8,9 +8,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-img_url = 'https://picsum.photos/1200'
+img_url = getenv('IMG_URL')
 # IMG_FOLDER = '/usr/src/app/files'
-IMG_FOLDER = 'files'
+IMG_FOLDER = getenv('IMG_FOLDER')
+
 
 def setup_logger():
     logging.basicConfig(level=logging.INFO)

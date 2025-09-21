@@ -6,8 +6,8 @@ import requests
 app = Flask(__name__)
 
 # Configuration
-FILES_DIR = '/usr/src/app/files'
-TODO_API_BASE_URL = 'http://todo-backend-svc:2345' 
+FILES_DIR = os.environ.get('FILES_DIR')
+TODO_API_BASE_URL = os.environ.get('TODO_API_BASE_URL')
 
 def get_latest_image():
     """Get the most recent image file from the files directory."""
@@ -109,5 +109,5 @@ def serve_image(filename):
     return send_from_directory(FILES_DIR, filename)
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 3000))
+    port = int(os.environ.get('PORT'))
     app.run(host='0.0.0.0', port=port, debug=True)

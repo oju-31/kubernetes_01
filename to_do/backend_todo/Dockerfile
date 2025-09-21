@@ -13,8 +13,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the app
 COPY backend.py .
 
-# Environment variable for Flask
-ENV PORT=3000
-
 # Run the app
 CMD ["python", "backend.py"]
