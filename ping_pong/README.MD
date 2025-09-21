@@ -1,1 +1,1 @@
-Deploy with `kubectl apply -f manifests`
+Deploy with `kubectl apply -f ../log_output/manifests && kubectl apply -f manifests`

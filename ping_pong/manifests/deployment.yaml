@@ -15,5 +15,18 @@ spec:
     spec:
       containers:
         - name: pong-app
-          image: toussyn/ping-pong:v03
+          image: toussyn/ping-pong:v04
           imagePullPolicy: Always
+          env:
+          - name: DATABASE_HOST
+            value: "pong-ss-0.pong-headless"
+          - name: DATABASE_USER
+            value: "postgres"
+          - name: DATABASE_PORT
+            value: "5432"
+          - name: DATABASE_PASSWORD
+            value: "password"
+          - name: DATABASE_NAME
+            value: "pongdb"
+          - name: PORT
+            value: "3000"
