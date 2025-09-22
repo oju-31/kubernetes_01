@@ -9,3 +9,8 @@ data:
   TODO_API_BASE_URL: http://todo-backend-svc:2345
   IMG_URL: https://picsum.photos/1200
   IMG_FOLDER: files
+  DATABASE_HOST: todo-ss-0.todo-headless
+  DATABASE_USER: postgres
+  DATABASE_PORT: "5432"
+  DATABASE_PASSWORD: password
+  DATABASE_NAME: tododb

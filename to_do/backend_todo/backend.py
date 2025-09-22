@@ -1,50 +1,87 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from os import getenv
+import psycopg2
+import psycopg2.extras
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+PORT = int(getenv('PORT'))
 
-# In-memory storage for todos
-todos = [
-    {"id": 1, "text": "Learn JavaScript"},
-    {"id": 2, "text": "Learn React"},
-    {"id": 3, "text": "Build a project"}
-]
+# Database connection from environment variables
+def get_db():
+    return psycopg2.connect(
+        host=getenv('DATABASE_HOST'),
+        port=getenv('DATABASE_PORT', '5432'),
+        user=getenv('DATABASE_USER'),
+        password=getenv('DATABASE_PASSWORD'),
+        database=getenv('DATABASE_NAME')
+    )
 
-# Counter for generating new todo IDs
-next_id = 4
+# Initialize database table
+def init_db():
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Create todos table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS todos (
+            id SERIAL PRIMARY KEY,
+            text TEXT NOT NULL
+        )
+    ''')
+    
+    # Insert default todos if table is empty
+    cursor.execute('SELECT COUNT(*) FROM todos')
+    if cursor.fetchone()[0] == 0:
+        default_todos = [
+            ("Learn JavaScript",),
+            ("Learn React",),
+            ("Build a project",)
+        ]
+        cursor.executemany('INSERT INTO todos (text) VALUES (%s)', default_todos)
+    
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 @app.route('/todos', methods=['GET'])
 def get_todos():
     """Get all todos"""
-    return jsonify(todos)
+    conn = get_db()
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    
+    cursor.execute('SELECT id, text FROM todos ORDER BY id')
+    todos = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+    
+    return jsonify(list(todos))
 
 @app.route('/todos', methods=['POST'])
 def create_todo():
     """Create a new todo"""
-    global next_id
-    
-    # Get JSON data from request
     data = request.get_json()
     
-    # Validate that 'text' field is provided
     if not data or 'text' not in data:
         return jsonify({"error": "Todo text is required"}), 400
     
-    # Create new todo
-    new_todo = {
-        "id": next_id,
-        "text": data['text']
-    }
+    conn = get_db()
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     
-    # Add to todos list and increment ID counter
-    todos.append(new_todo)
-    next_id += 1
+    cursor.execute(
+        'INSERT INTO todos (text) VALUES (%s) RETURNING id, text',
+        (data['text'],)
+    )
     
-    return jsonify(new_todo), 201
-
+    new_todo = cursor.fetchone()
+    conn.commit()
+    cursor.close()
+    conn.close()
+    
+    return jsonify(dict(new_todo)), 201
 
 if __name__ == '__main__':
-    port = int(getenv('PORT'))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    init_db()
+    app.run(host='0.0.0.0', port=PORT, debug=True)
