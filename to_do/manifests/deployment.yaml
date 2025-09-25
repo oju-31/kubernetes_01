@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: toussyn/todo-backend:v03
+          image: toussyn/todo-backend:v04
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
