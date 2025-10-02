@@ -10,3 +10,6 @@ k3d cluster create --port 8082:30080@agent:0 -p 8081:80@loadbalancer --agents 2
 
 from 1.11
 docker exec k3d-k3s-default-agent-0 mkdir -p /tmp/kube
+
+from 3.1
+gcloud container clusters create dwk-cluster --zone=europe-north1-b --cluster-version=1.32 --disk-size=32 --num-nodes=3 --machine-type=e2-micro

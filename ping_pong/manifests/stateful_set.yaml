@@ -33,7 +33,6 @@ spec:
         name: sql-storage
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: local-path
         resources:
           requests:
             storage: 1Gi
@@ -51,7 +50,3 @@ spec:
   ports:
     - port: 5432
       name: web
-
-
-
-      

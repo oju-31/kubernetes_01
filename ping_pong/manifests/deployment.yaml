@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: pong-app
-          image: toussyn/ping-pong:v04
+          image: toussyn/ping-pong:v05
           imagePullPolicy: Always
           env:
           - name: DATABASE_HOST
