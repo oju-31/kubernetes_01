@@ -19,7 +19,7 @@ spec:
           imagePullPolicy: Always
           env:
           - name: DATABASE_HOST
-            value: "pong-ss-0.pong-headless"
+            value: "pong-ss-0.pong-headless.exercises.svc"
           - name: DATABASE_USER
             value: "postgres"
           - name: DATABASE_PORT
