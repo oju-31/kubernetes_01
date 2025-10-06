@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: pong-app
-          image: toussyn/ping-pong:v05
+          image: toussyn/ping-pong:v07
           imagePullPolicy: Always
           env:
           - name: DATABASE_HOST
@@ -30,3 +30,96 @@ spec:
             value: "pongdb"
           - name: PORT
             value: "3000"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: exercises
+  name: log-app-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-app
+  template:
+    metadata:
+      labels:
+        app: log-app
+    spec:
+      volumes: # Define volume
+        - name: config-volume
+          configMap:
+            name: log-config
+            items:
+              - key: information.txt
+                path: info.txt
+          
+      containers:
+      #   - name: log-writer
+      #     image: toussyn/writer:v1
+      #     imagePullPolicy: Always
+      #     volumeMounts:
+      #       - mountPath: /usr/src/app/files
+      #         name: shared-log
+        - name: log-reader
+          image: toussyn/reader:v3
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: log-config
+          volumeMounts:
+          - mountPath: /usr/src/app/files
+            name: config-volume
+
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: pong-ss
+  namespace: exercises
+spec:
+  serviceName: pong-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pong-sql
+  template:
+    metadata:
+      labels:
+        app: pong-sql
+    spec:
+      containers:
+        - name: pong-sql
+          image: postgres
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "password"
+            - name: POSTGRES_DB
+              value: "pongdb"
+            # - name: PGDATA
+            #   value: /var/lib/postgresql/data/pgdata
+          ports:
+            - name: postgres
+              containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: sql-storage
+          readinessProbe:  # ✓ Added
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 5
+            periodSeconds: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: sql-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 1Gi

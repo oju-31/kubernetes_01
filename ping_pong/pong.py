@@ -131,9 +131,9 @@ def increment_counter():
         return 0
 
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def root():
-    return health()
+    return "OK", 200
 
 
 @app.route('/pingpong', methods=['GET'])

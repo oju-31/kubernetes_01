@@ -14,6 +14,8 @@ docker exec k3d-k3s-default-agent-0 mkdir -p /tmp/kube
 from 3.1
 gcloud container clusters create dwk-cluster --zone=europe-north1-b --cluster-version=1.32 --disk-size=32 --num-nodes=3 --machine-type=e2-small
 
-gcloud container clusters delete dwk-cluster --zone=europe-north1-b
+gcloud container clusters delete dwk-cluster --zone=europe-west1-b
 
 gcloud container clusters get-credentials dwk-cluster --zone=europe-north1-b
+
+http://
