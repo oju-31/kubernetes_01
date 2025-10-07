@@ -131,12 +131,12 @@ def increment_counter():
         return 0
 
 
-@app.route('/')
-def root():
-    return "OK", 200
+# @app.route('/')
+# def root():
+#     return "OK", 200
 
 
-@app.route('/pingpong', methods=['GET'])
+@app.route('/', methods=['GET'])
 def pingpong():
     # Get current counter value before incrementing
     current_counter = get_current_counter()
