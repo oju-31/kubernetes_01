@@ -1,0 +1,55 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: log-pong-gateway
+  namespace: exercises
+spec:
+  gatewayClassName: gke-l7-global-external-managed
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      kinds:
+      - kind: HTTPRoute
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: log-pong-route
+  namespace: exercises
+spec:
+  parentRefs:
+  - name: log-pong-gateway
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /pingpong
+    backendRefs:
+    - name: pong-svc
+      port: 2345
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: log-app-svc
+      port: 2345
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /pings
+    backendRefs:
+    - name: pong-svc
+      port: 2345
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /health
+    backendRefs:
+    - name: pong-svc
+      port: 2345
+
+  
