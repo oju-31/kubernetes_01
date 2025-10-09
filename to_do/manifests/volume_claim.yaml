@@ -4,7 +4,7 @@ metadata:
   namespace: project
   name: image-claim # name of the volume claim, this will be used in the deployment
 spec:
-  storageClassName: todo-pv # this is the name of the persistent volume we are claiming
+  storageClassName: standard
   accessModes:
     - ReadWriteOnce
   resources:
