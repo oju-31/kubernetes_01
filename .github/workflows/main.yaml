@@ -41,7 +41,7 @@ jobs:
       - name: 'Build and push image-writer'
         run: |
           IMAGE_TAG=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/image-writer:${{ env.BRANCH }}-${{ github.sha }}
-          docker build -t $IMAGE_TAG -f Dockerfile.image-writer ./to_do/image-writer
+          docker build -t $IMAGE_TAG -f Dockerfile.image-writer ./to_do/image_writer
           docker push $IMAGE_TAG
           echo "IMAGE_WRITER_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
