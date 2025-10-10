@@ -53,6 +53,12 @@ def init_db():
     cursor.close()
     conn.close()
 
+
+@app.route('/')
+def root():
+    return "OK", 200
+
+
 @app.route('/todos', methods=['GET'])
 def get_todos():
     """Get all todos"""
@@ -69,6 +75,7 @@ def get_todos():
     
     logger.info(f"GET /todos - Returned {len(todos)} todos")
     return jsonify(list(todos))
+
 
 @app.route('/todos', methods=['POST'])
 def create_todo():

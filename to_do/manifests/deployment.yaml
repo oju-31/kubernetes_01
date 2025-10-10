@@ -5,6 +5,8 @@ metadata:
   name: todo-app-dep
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: todo-app
@@ -45,6 +47,8 @@ metadata:
   name: todo-backend-dep
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: todo-backend
@@ -55,7 +59,7 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: toussyn/todo-backend:v04
+          image: toussyn/todo-backend:v05
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
