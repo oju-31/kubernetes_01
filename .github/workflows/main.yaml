@@ -66,9 +66,8 @@ jobs:
 
       - name: Deploy
         run: |-
-          cd to_do
           kubectl create namespace project --dry-run=client -o yaml | kubectl apply -f -
-          cd manifests
+          cd to_do
           kustomize edit set image IMAGE_WRITER=${{ env.IMAGE_WRITER_TAG }}
           kustomize edit set image TODO_APP=${{ env.TODO_APP_TAG }}
           kustomize edit set image TODO_BACKEND=${{ env.TODO_BACKEND_TAG }}
