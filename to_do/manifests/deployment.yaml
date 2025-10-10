@@ -21,7 +21,7 @@ spec:
             claimName: image-claim
       containers:
         - name: image-writer
-          image: toussyn/img-writer:v03
+          image: IMAGE_WRITER
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
@@ -30,7 +30,7 @@ spec:
           - name: shared-image
             mountPath: /usr/src/app/files
         - name: todo-app
-          image: toussyn/todo-app:v06
+          image: TODO_APP
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
@@ -59,7 +59,7 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: toussyn/todo-backend:v05
+          image: TODO_BACKEND
           imagePullPolicy: Always
           envFrom:
             - configMapRef:

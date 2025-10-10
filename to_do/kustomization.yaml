@@ -9,3 +9,10 @@ resources:
   - manifests/deployment.yaml
   - manifests/cronjob.yaml
   - manifests/ingress.yaml
+images:
+  - name: IMAGE_WRITER
+    newName: placeholder
+  - name: TODO_APP
+    newName: placeholder
+  - name: TODO_BACKEND
+    newName: placeholder
