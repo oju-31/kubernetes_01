@@ -41,7 +41,7 @@ jobs:
       - name: 'Build and push image-writer'
         run: |
           IMAGE_TAG=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/image-writer:${{ env.BRANCH }}-${{ github.sha }}
-          docker build -t $IMAGE_TAG -f Dockerfile.image-writer ./to_do/image_writer
+          docker build -t $IMAGE_TAG ./to_do/image_writer
           docker push $IMAGE_TAG
           echo "IMAGE_WRITER_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
@@ -49,7 +49,7 @@ jobs:
       - name: 'Build and push todo-app'
         run: |
           IMAGE_TAG=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/todo-app:${{ env.BRANCH }}-${{ github.sha }}
-          docker build -t $IMAGE_TAG -f Dockerfile.todo-app ./to_do/app_todo
+          docker build -t $IMAGE_TAG ./to_do/app_todo
           docker push $IMAGE_TAG
           echo "TODO_APP_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
@@ -57,7 +57,7 @@ jobs:
       - name: 'Build and push todo-backend'
         run: |
           IMAGE_TAG=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/todo-backend:${{ env.BRANCH }}-${{ github.sha }}
-          docker build -t $IMAGE_TAG -f Dockerfile.todo-backend ./to_do/backend_todo
+          docker build -t $IMAGE_TAG ./to_do/backend_todo
           docker push $IMAGE_TAG
           echo "TODO_BACKEND_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
