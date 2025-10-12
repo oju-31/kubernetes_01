@@ -20,4 +20,4 @@ gcloud container clusters get-credentials dwk-cluster --zone=europe-west1-b
 
 kubectl delete all,cm,secret,pvc,gateway,httproute --all
 
-http://34.49.247.232
+http://34.107.229.118

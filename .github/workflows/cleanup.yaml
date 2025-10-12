@@ -1,0 +1,48 @@
+name: Cleanup Environment
+
+on:
+  delete:
+    branches:
+      - '**'
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-west1-b
+
+jobs:
+  cleanup:
+    name: Delete Branch Environment
+    runs-on: ubuntu-latest
+    if: github.event.ref_type == 'branch'
+    
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GKE_SA_KEY }}'
+      
+      - name: 'Set up Cloud SDK'
+        uses: google-github-actions/setup-gcloud@v2
+      
+      - name: 'Get GKE credentials'
+        uses: 'google-github-actions/get-gke-credentials@v2'
+        with:
+          cluster_name: '${{ env.GKE_CLUSTER }}'
+          project_id: '${{ env.PROJECT_ID }}'
+          location: '${{ env.GKE_ZONE }}'
+
+      - name: Delete namespace
+        run: |
+          NAMESPACE="${{ github.event.ref }}"
+          echo "Deleting namespace: $NAMESPACE"
+          kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+          
+      - name: Verify deletion
+        run: |
+          NAMESPACE="${{ github.event.ref }}"
+          if kubectl get namespace "$NAMESPACE" 2>/dev/null; then
+            echo "Warning: Namespace $NAMESPACE still exists"
+            exit 1
+          else
+            echo "Namespace $NAMESPACE successfully deleted"
+          fi
