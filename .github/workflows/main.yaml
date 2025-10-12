@@ -2,6 +2,8 @@ name: Release application
 
 on:
   push:
+    branches:
+      - project
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
@@ -66,12 +68,14 @@ jobs:
 
       - name: Deploy
         run: |-
-          kubectl create namespace project --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create namespace ${GITHUB_REF#refs/heads/} || true
+          kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
           cd to_do
+          kustomize edit set namespace ${GITHUB_REF#refs/heads/}
           kustomize edit set image IMAGE_WRITER=${{ env.IMAGE_WRITER_TAG }}
           kustomize edit set image TODO_APP=${{ env.TODO_APP_TAG }}
           kustomize edit set image TODO_BACKEND=${{ env.TODO_BACKEND_TAG }}
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/todo-app-dep -n project
-          kubectl rollout status deployment/todo-backend-dep -n project
-          kubectl get services -n project -o wide
+          kubectl rollout status deployment/todo-app-dep
+          kubectl rollout status deployment/todo-backend-dep
+          kubectl get services -o wide
