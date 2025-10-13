@@ -13,69 +13,69 @@ env:
   REPOSITORY: my-docker-repo
   BRANCH: ${{ github.ref_name }}
 
-jobs:
-  build-publish-deploy:
-    name: Build, Publish and Deploy
-    runs-on: ubuntu-latest
-    environment: prod
+# jobs:
+#   build-publish-deploy:
+#     name: Build, Publish and Deploy
+#     runs-on: ubuntu-latest
+#     environment: prod
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
       
-      - uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ secrets.GKE_SA_KEY }}'
+#       - uses: google-github-actions/auth@v2
+#         with:
+#           credentials_json: '${{ secrets.GKE_SA_KEY }}'
       
-      - name: 'Set up Cloud SDK'
-        uses: google-github-actions/setup-gcloud@v2
+#       - name: 'Set up Cloud SDK'
+#         uses: google-github-actions/setup-gcloud@v2
       
-      - run: gcloud --quiet auth configure-docker ${{ env.REGISTRY }}
+#       - run: gcloud --quiet auth configure-docker ${{ env.REGISTRY }}
       
-      - name: 'Get GKE credentials'
-        uses: 'google-github-actions/get-gke-credentials@v2'
-        with:
-          cluster_name: '${{ env.GKE_CLUSTER }}'
-          project_id: '${{ env.PROJECT_ID }}'
-          location: '${{ env.GKE_ZONE }}'
+#       - name: 'Get GKE credentials'
+#         uses: 'google-github-actions/get-gke-credentials@v2'
+#         with:
+#           cluster_name: '${{ env.GKE_CLUSTER }}'
+#           project_id: '${{ env.PROJECT_ID }}'
+#           location: '${{ env.GKE_ZONE }}'
 
-      # Build and push image-writer
-      - name: 'Build and push image-writer'
-        run: |
-          IMAGE_TAG=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/image-writer:${{ env.BRANCH }}-${{ github.sha }}
-          docker build -t $IMAGE_TAG ./to_do/image_writer
-          docker push $IMAGE_TAG
-          echo "IMAGE_WRITER_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+#       # Build and push image-writer
+#       - name: 'Build and push image-writer'
+#         run: |
+#           IMAGE_TAG=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/image-writer:${{ env.BRANCH }}-${{ github.sha }}
+#           docker build -t $IMAGE_TAG ./to_do/image_writer
+#           docker push $IMAGE_TAG
+#           echo "IMAGE_WRITER_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-      # Build and push todo-app
-      - name: 'Build and push todo-app'
-        run: |
-          IMAGE_TAG=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/todo-app:${{ env.BRANCH }}-${{ github.sha }}
-          docker build -t $IMAGE_TAG ./to_do/app_todo
-          docker push $IMAGE_TAG
-          echo "TODO_APP_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+#       # Build and push todo-app
+#       - name: 'Build and push todo-app'
+#         run: |
+#           IMAGE_TAG=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/todo-app:${{ env.BRANCH }}-${{ github.sha }}
+#           docker build -t $IMAGE_TAG ./to_do/app_todo
+#           docker push $IMAGE_TAG
+#           echo "TODO_APP_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-      # Build and push todo-backend
-      - name: 'Build and push todo-backend'
-        run: |
-          IMAGE_TAG=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/todo-backend:${{ env.BRANCH }}-${{ github.sha }}
-          docker build -t $IMAGE_TAG ./to_do/backend_todo
-          docker push $IMAGE_TAG
-          echo "TODO_BACKEND_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+#       # Build and push todo-backend
+#       - name: 'Build and push todo-backend'
+#         run: |
+#           IMAGE_TAG=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/todo-backend:${{ env.BRANCH }}-${{ github.sha }}
+#           docker build -t $IMAGE_TAG ./to_do/backend_todo
+#           docker push $IMAGE_TAG
+#           echo "TODO_BACKEND_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-      - name: Set up Kustomize
-        uses: imranismail/setup-kustomize@v2.1.0
+#       - name: Set up Kustomize
+#         uses: imranismail/setup-kustomize@v2.1.0
 
-      - name: Deploy
-        run: |-
-          kubectl create namespace ${GITHUB_REF#refs/heads/} || true
-          kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
-          cd to_do
-          kustomize edit set namespace ${GITHUB_REF#refs/heads/}
-          kustomize edit set image IMAGE_WRITER=${{ env.IMAGE_WRITER_TAG }}
-          kustomize edit set image TODO_APP=${{ env.TODO_APP_TAG }}
-          kustomize edit set image TODO_BACKEND=${{ env.TODO_BACKEND_TAG }}
-          kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/todo-app-dep
-          kubectl rollout status deployment/todo-backend-dep
-          kubectl get services -o wide
+#       - name: Deploy
+#         run: |-
+#           kubectl create namespace ${GITHUB_REF#refs/heads/} || true
+#           kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
+#           cd to_do
+#           kustomize edit set namespace ${GITHUB_REF#refs/heads/}
+#           kustomize edit set image IMAGE_WRITER=${{ env.IMAGE_WRITER_TAG }}
+#           kustomize edit set image TODO_APP=${{ env.TODO_APP_TAG }}
+#           kustomize edit set image TODO_BACKEND=${{ env.TODO_BACKEND_TAG }}
+#           kustomize build . | kubectl apply -f -
+#           kubectl rollout status deployment/todo-app-dep
+#           kubectl rollout status deployment/todo-backend-dep
+#           kubectl get services -o wide
