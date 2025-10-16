@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: todo-sql
-          image: postgres
+          image: postgres:17
           env:
             - name: POSTGRES_PASSWORD
               value: "password"

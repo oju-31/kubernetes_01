@@ -14,3 +14,4 @@ data:
   DATABASE_PORT: "5432"
   DATABASE_PASSWORD: password
   DATABASE_NAME: tododb
+  GCS_BUCKET: pg-backup-1

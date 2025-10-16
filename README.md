@@ -29,4 +29,17 @@ gcloud container clusters get-credentials dwk-cluster --zone=europe-west1-b
 
 kubectl delete all,cm,secret,pvc,gateway,httproute --all
 
-http://34.107.229.118
+gcloud iam service-accounts create postgres-backup-sa
+
+# 2. Grant GCS permissions
+gcloud projects add-iam-policy-binding dwk-gke-473905 \
+  --member "serviceAccount:postgres-backup-sa@dwk-gke-473905.iam.gserviceaccount.com" \
+  --role "roles/storage.objectAdmin"
+
+# 3. Enable Workload Identity binding
+gcloud iam service-accounts add-iam-policy-binding \
+  postgres-backup-sa@dwk-gke-473905.iam.gserviceaccount.com \
+  --role roles/iam.workloadIdentityUser \
+  --member "serviceAccount:dwk-gke-473905.svc.id.goog[project/postgres-backup-sa]"
+
+http://34.54.157.172

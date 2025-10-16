@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: todo-generator
+  namespace: project
+spec:
+  # Run every hour at minute 0 (0 * * * *)
+  schedule: "0 * * * *"
+  successfulJobsHistoryLimit: 18  # Keep ~3 hours of successful jobs (18 * 10min)
+  failedJobsHistoryLimit: 12 
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: todo-generator
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: todo-generator
+            image: toussyn/gen-todo:v01
+            imagePullPolicy: Always
+            envFrom:
+            - configMapRef:
+                name: todo-config
+
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: todo-backup
+  namespace: project
+spec:
+  # Run every 5 minutes (for testing)
+  schedule: "*/5 * * * *"
+  successfulJobsHistoryLimit: 18
+  failedJobsHistoryLimit: 12
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: todo-backup
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: backup-db
+              image: toussyn/pg-backup:v01
+              imagePullPolicy: Always
+              envFrom:
+                - configMapRef:
+                    name: todo-config
+              env:
+                # Point gsutil to your credentials file
+                - name: GOOGLE_APPLICATION_CREDENTIALS
+                  value: /secrets/key.json
+              volumeMounts:
+                # Mount the secret at /secrets
+                - name: gcp-credentials
+                  mountPath: /secrets
+                  readOnly: true
+          volumes:
+            - name: gcp-credentials
+              secret:
+                secretName: gcs-credentials
